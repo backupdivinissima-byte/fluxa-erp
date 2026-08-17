@@ -83,6 +83,18 @@ export interface Cargo extends CadastroBase {
   codigoContabil?: string;
 }
 
+// ===== Estoque =====
+
+export interface Produto extends CadastroBase {
+  sku?: string;
+  categoria?: string;
+  unidade?: string;
+  precoVenda?: number;
+  precoCusto?: number;
+  quantidade?: number;
+  estoqueMinimo?: number;
+}
+
 export type TipoCadastro =
   | 'clientes'
   | 'fornecedores'
@@ -90,6 +102,7 @@ export type TipoCadastro =
   | 'vendedores'
   | 'departamentos'
   | 'cargos'
+  | 'produtos'
   | 'contasPagar'
   | 'contasReceber';
 
