@@ -38,23 +38,55 @@ export interface CadastroBase {
 export interface Cliente extends CadastroBase {
   razaoSocial?: string;
   endereco?: string;
+  whatsapp?: string;
+  redeSocial?: string;
+  lojaFisica?: boolean;
 }
 
 export interface Fornecedor extends CadastroBase {
   razaoSocial?: string;
   endereco?: string;
   categoria?: string;
+  redeSocial?: string;
+  lojaFisica?: boolean;
 }
 
 export interface Funcionario extends CadastroBase {
   cargo?: string;
   departamento?: string;
   dataAdmissao?: string;
+  dataDemissao?: string;
+}
+
+export interface MetaVendedor {
+  id: string;
+  nome: string; // Ex: M1, M2, M3...
+  valorMeta?: number;
+  comissaoPercentual?: number;
 }
 
 export interface Vendedor extends CadastroBase {
+  /** @deprecated substituído por `metas` (permite mais de uma meta/comissão) */
   comissaoPercentual?: number;
+  /** @deprecated substituído por `metas` (permite mais de uma meta/comissão) */
   metaMensal?: number;
+  metas?: MetaVendedor[];
 }
 
-export type TipoCadastro = 'clientes' | 'fornecedores' | 'funcionarios' | 'vendedores';
+// ===== Cadastros contábeis (departamentos e cargos) =====
+
+export interface Departamento extends CadastroBase {
+  codigoContabil?: string;
+}
+
+export interface Cargo extends CadastroBase {
+  codigoContabil?: string;
+}
+
+export type TipoCadastro =
+  | 'clientes'
+  | 'fornecedores'
+  | 'funcionarios'
+  | 'vendedores'
+  | 'departamentos'
+  | 'cargos';
