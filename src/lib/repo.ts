@@ -11,13 +11,22 @@ import {
 } from 'firebase/firestore';
 import { db, isFirebaseConfigured } from './firebase';
 import type { CadastroBase, TipoCadastro } from '../types';
-import { clientesMock, fornecedoresMock, funcionariosMock, vendedoresMock } from './mockData';
+import {
+  clientesMock,
+  fornecedoresMock,
+  funcionariosMock,
+  vendedoresMock,
+  departamentosMock,
+  cargosMock,
+} from './mockData';
 
 const mockPorTipo: Record<TipoCadastro, CadastroBase[]> = {
   clientes: clientesMock,
   fornecedores: fornecedoresMock,
   funcionarios: funcionariosMock,
   vendedores: vendedoresMock,
+  departamentos: departamentosMock,
+  cargos: cargosMock,
 };
 
 // Assina a lista de registros de um cadastro (clientes, fornecedores, etc.)
