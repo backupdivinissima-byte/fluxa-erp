@@ -37,12 +37,12 @@ function AppRoutes() {
         }
       >
         <Route path="/" element={<Dashboard />} />
-        <Route path="/cadastros/clientes" element={<Clientes />} />
-        <Route path="/cadastros/fornecedores" element={<Fornecedores />} />
-        <Route path="/cadastros/funcionarios" element={<Funcionarios />} />
-        <Route path="/cadastros/vendedores" element={<Vendedores />} />
-        <Route path="/cadastros/departamentos" element={<Departamentos />} />
-        <Route path="/cadastros/cargos" element={<Cargos />} />
+        <Route path="/cadastros/clientes/*" element={<Clientes />} />
+        <Route path="/cadastros/fornecedores/*" element={<Fornecedores />} />
+        <Route path="/cadastros/funcionarios/*" element={<Funcionarios />} />
+        <Route path="/cadastros/vendedores/*" element={<Vendedores />} />
+        <Route path="/cadastros/departamentos/*" element={<Departamentos />} />
+        <Route path="/cadastros/cargos/*" element={<Cargos />} />
       </Route>
     </Routes>
   );
