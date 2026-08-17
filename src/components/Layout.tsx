@@ -60,9 +60,15 @@ const grupos: GrupoMenu[] = [
       { tipo: 'link', to: '/financeiro/fluxo-caixa', label: 'Fluxo de caixa', icon: '📈' },
     ],
   },
+  {
+    id: 'estoque',
+    label: 'Estoque',
+    icon: '📦',
+    itens: [{ tipo: 'link', to: '/estoque/produtos', label: 'Produtos', icon: '💍' }],
+  },
 ];
 
-const emBreve = ['Estoque', 'Compras', 'Nota Fiscal'];
+const emBreve = ['Compras', 'Nota Fiscal'];
 
 function linksDoGrupo(itens: EntradaMenu[]): ItemLink[] {
   return itens.flatMap((entrada) => (entrada.tipo === 'link' ? [entrada] : entrada.itens));
