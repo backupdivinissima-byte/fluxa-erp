@@ -89,4 +89,27 @@ export type TipoCadastro =
   | 'funcionarios'
   | 'vendedores'
   | 'departamentos'
-  | 'cargos';
+  | 'cargos'
+  | 'contasPagar'
+  | 'contasReceber';
+
+// ===== Financeiro =====
+
+export type StatusConta = 'pendente' | 'pago' | 'vencido';
+
+/**
+ * Um lançamento financeiro (conta a pagar ou a receber). Reaproveita
+ * `CadastroBase`: `nome` funciona como a descrição do lançamento, e `ativo`
+ * fica sempre true (o estado real do lançamento é o campo `status`).
+ */
+export interface LancamentoFinanceiro extends CadastroBase {
+  valor: number;
+  vencimento: string; // data ISO (yyyy-mm-dd)
+  dataPagamento?: string; // data ISO, preenchida quando status = 'pago'
+  status: StatusConta;
+  categoria?: string;
+  /** Vínculo com o cadastro de clientes (contas a receber). */
+  clienteId?: string;
+  /** Vínculo com o cadastro de fornecedores (contas a pagar). */
+  fornecedorId?: string;
+}
