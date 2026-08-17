@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
-import type { TipoCadastro, Vendedor } from '../types';
+import type { TipoCadastro, Vendedor, Produto } from '../types';
+import { formatarMoeda } from './financeiroUtils';
 
 export interface CampoConfig {
   key: string;
@@ -160,6 +161,44 @@ export const cadastroSchemas: Record<TipoCadastroSimples, CadastroSchema> = {
     campos: [
       { key: 'nome', label: 'Nome do cargo', tipo: 'text', obrigatorio: true, colunaTabela: true },
       { key: 'codigoContabil', label: 'Código contábil', tipo: 'text', colunaTabela: true, placeholder: 'Ex: 4.1.05' },
+    ],
+  },
+  produtos: {
+    tipo: 'produtos',
+    titulo: 'Produtos',
+    tituloSingular: 'produto',
+    descricao: 'Itens do seu catálogo, com preço e quantidade em estoque.',
+    campos: [
+      { key: 'nome', label: 'Nome', tipo: 'text', obrigatorio: true, colunaTabela: true },
+      { key: 'sku', label: 'SKU / código', tipo: 'text', colunaTabela: true, placeholder: 'Ex: COL-001' },
+      { key: 'categoria', label: 'Categoria', tipo: 'text', colunaTabela: true, placeholder: 'Ex: Colares, Brincos...' },
+      { key: 'unidade', label: 'Unidade', tipo: 'text', placeholder: 'Ex: un, par, kg...' },
+      {
+        key: 'precoVenda',
+        label: 'Preço de venda (R$)',
+        tipo: 'number',
+        colunaTabela: true,
+        render: (item) => formatarMoeda((item as unknown as Produto).precoVenda),
+      },
+      { key: 'precoCusto', label: 'Preço de custo (R$)', tipo: 'number' },
+      { key: 'estoqueMinimo', label: 'Estoque mínimo', tipo: 'number', placeholder: 'Alerta quando a quantidade cair abaixo disso' },
+      {
+        key: 'quantidade',
+        label: 'Quantidade em estoque',
+        tipo: 'number',
+        colunaTabela: true,
+        render: (item) => {
+          const produto = item as unknown as Produto;
+          const qtd = produto.quantidade ?? 0;
+          const baixo = produto.estoqueMinimo != null && qtd <= produto.estoqueMinimo;
+          return (
+            <span className={baixo ? 'inline-flex items-center gap-1.5 font-bold text-red-500' : ''}>
+              {qtd}
+              {baixo && <span title="Estoque baixo">⚠️</span>}
+            </span>
+          );
+        },
+      },
     ],
   },
 };

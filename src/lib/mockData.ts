@@ -1,4 +1,4 @@
-import type { Cliente, Fornecedor, Funcionario, Vendedor, Departamento, Cargo, LancamentoFinanceiro } from '../types';
+import type { Cliente, Fornecedor, Funcionario, Vendedor, Departamento, Cargo, LancamentoFinanceiro, Produto } from '../types';
 
 // Dados de demonstração — usados apenas quando não há projeto Firebase
 // configurado ainda (ambiente local de desenvolvimento/preview). Assim que
@@ -47,6 +47,13 @@ export const contasReceberMock: LancamentoFinanceiro[] = [
   { id: '2', nome: 'Venda — Joana Ferreira', valor: 620, vencimento: '2026-08-15', status: 'vencido', categoria: 'Vendas', clienteId: '2', ativo: true, criadoEm: now, atualizadoEm: now },
   { id: '3', nome: 'Venda — Semijoias Cristal', valor: 3100, vencimento: '2026-08-25', status: 'pendente', categoria: 'Vendas', clienteId: '3', ativo: true, criadoEm: now, atualizadoEm: now },
   { id: '4', nome: 'Venda — Ateliê Bela Vista', valor: 2200, vencimento: '2026-09-02', status: 'pendente', categoria: 'Vendas', clienteId: '1', ativo: true, criadoEm: now, atualizadoEm: now },
+];
+
+export const produtosMock: Produto[] = [
+  { id: '1', nome: 'Colar Gota de Cristal', sku: 'COL-001', categoria: 'Colares', unidade: 'un', precoVenda: 129.9, precoCusto: 48, quantidade: 34, estoqueMinimo: 10, ativo: true, criadoEm: now, atualizadoEm: now },
+  { id: '2', nome: 'Brinco Argola Dourada P', sku: 'BRI-014', categoria: 'Brincos', unidade: 'un', precoVenda: 69.9, precoCusto: 22, quantidade: 8, estoqueMinimo: 15, ativo: true, criadoEm: now, atualizadoEm: now },
+  { id: '3', nome: 'Anel Solitário Zircônia', sku: 'ANE-022', categoria: 'Anéis', unidade: 'un', precoVenda: 89.9, precoCusto: 31, quantidade: 21, estoqueMinimo: 10, ativo: true, criadoEm: now, atualizadoEm: now },
+  { id: '4', nome: 'Pulseira Riviera', sku: 'PUL-007', categoria: 'Pulseiras', unidade: 'un', precoVenda: 149.9, precoCusto: 55, quantidade: 3, estoqueMinimo: 8, ativo: true, criadoEm: now, atualizadoEm: now },
 ];
 
 export const vendedoresMock: Vendedor[] = [

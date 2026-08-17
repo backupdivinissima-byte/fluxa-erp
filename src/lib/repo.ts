@@ -18,6 +18,7 @@ import {
   vendedoresMock,
   departamentosMock,
   cargosMock,
+  produtosMock,
   contasPagarMock,
   contasReceberMock,
 } from './mockData';
@@ -29,6 +30,7 @@ const mockPorTipo: Record<TipoCadastro, CadastroBase[]> = {
   vendedores: vendedoresMock,
   departamentos: departamentosMock,
   cargos: cargosMock,
+  produtos: produtosMock,
   contasPagar: contasPagarMock,
   contasReceber: contasReceberMock,
 };
