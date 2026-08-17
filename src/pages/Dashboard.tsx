@@ -3,13 +3,14 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { assinarCadastro } from '../lib/repo';
 import { formatarMoeda, statusEfetivo } from '../lib/financeiroUtils';
-import type { LancamentoFinanceiro, TipoCadastro } from '../types';
+import type { LancamentoFinanceiro, Produto, TipoCadastro } from '../types';
 
 const cards: { tipo: TipoCadastro; label: string; icon: string }[] = [
   { tipo: 'clientes', label: 'Clientes', icon: '👤' },
   { tipo: 'fornecedores', label: 'Fornecedores', icon: '🚚' },
   { tipo: 'funcionarios', label: 'Funcionários', icon: '🧑‍💼' },
   { tipo: 'vendedores', label: 'Vendedores', icon: '🏷️' },
+  { tipo: 'produtos', label: 'Produtos', icon: '📦' },
 ];
 
 export default function Dashboard() {
@@ -17,6 +18,7 @@ export default function Dashboard() {
   const [contagens, setContagens] = useState<Record<string, number>>({});
   const [contasPagar, setContasPagar] = useState<LancamentoFinanceiro[]>([]);
   const [contasReceber, setContasReceber] = useState<LancamentoFinanceiro[]>([]);
+  const [produtos, setProdutos] = useState<Produto[]>([]);
 
   useEffect(() => {
     if (!empresa) return;
@@ -37,6 +39,16 @@ export default function Dashboard() {
       unsub2();
     };
   }, [empresa]);
+
+  useEffect(() => {
+    if (!empresa) return;
+    return assinarCadastro<Produto>(empresa.id, 'produtos', setProdutos);
+  }, [empresa]);
+
+  const produtosBaixoEstoque = useMemo(
+    () => produtos.filter((p) => p.estoqueMinimo != null && (p.quantidade ?? 0) <= p.estoqueMinimo),
+    [produtos]
+  );
 
   const resumoFinanceiro = useMemo(() => {
     const emAberto = (itens: LancamentoFinanceiro[]) =>
@@ -62,7 +74,7 @@ export default function Dashboard() {
         Aqui está o resumo da <b>{empresa?.nome}</b>.
       </p>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
         {cards.map((c) => (
           <div key={c.tipo} className="bg-white border border-line rounded-2xl p-5">
             <div className="text-2xl mb-2">{c.icon}</div>
@@ -104,12 +116,33 @@ export default function Dashboard() {
         </div>
       </div>
 
+      {produtosBaixoEstoque.length > 0 && (
+        <div className="mb-6">
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-base font-extrabold text-ink">⚠️ Estoque baixo</h2>
+            <Link to="/estoque/produtos" className="text-xs font-bold text-blue-600 hover:underline">
+              Ver produtos →
+            </Link>
+          </div>
+          <div className="bg-white border border-line rounded-2xl overflow-hidden">
+            {produtosBaixoEstoque.map((p) => (
+              <div key={p.id} className="flex items-center justify-between px-5 py-3 border-b border-line last:border-0">
+                <span className="text-sm font-semibold text-ink">{p.nome}</span>
+                <span className="text-xs font-bold text-red-500">
+                  {p.quantidade ?? 0} em estoque · mínimo {p.estoqueMinimo}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       <div className="bg-gradient-to-br from-teal-500 to-blue-600 rounded-2xl p-6 text-white">
         <div className="text-sm font-bold uppercase tracking-wide opacity-80 mb-1">Próxima etapa</div>
-        <h2 className="text-lg font-extrabold mb-2">Módulo Estoque</h2>
+        <h2 className="text-lg font-extrabold mb-2">Módulo Compras</h2>
         <p className="text-sm opacity-90 max-w-lg">
-          Com cadastros e financeiro prontos, o próximo passo é o controle de produtos e estoque —
-          para depois ligar tudo com compras e vendas.
+          Com cadastros, financeiro e estoque prontos, o próximo passo é ligar tudo — pedidos de
+          compra aos fornecedores que já reabastecem o estoque e geram contas a pagar automaticamente.
         </p>
       </div>
     </div>
