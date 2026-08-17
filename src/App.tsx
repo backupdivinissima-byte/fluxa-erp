@@ -10,6 +10,9 @@ import Funcionarios from './pages/cadastros/Funcionarios';
 import Vendedores from './pages/cadastros/Vendedores';
 import Departamentos from './pages/cadastros/Departamentos';
 import Cargos from './pages/cadastros/Cargos';
+import ContasPagar from './pages/financeiro/ContasPagar';
+import ContasReceber from './pages/financeiro/ContasReceber';
+import FluxoDeCaixa from './pages/financeiro/FluxoDeCaixa';
 
 function RotaProtegida({ children }: { children: React.ReactNode }) {
   const { carregando, perfil } = useAuth();
@@ -43,6 +46,9 @@ function AppRoutes() {
         <Route path="/cadastros/vendedores/*" element={<Vendedores />} />
         <Route path="/cadastros/departamentos/*" element={<Departamentos />} />
         <Route path="/cadastros/cargos/*" element={<Cargos />} />
+        <Route path="/financeiro/contas-pagar/*" element={<ContasPagar />} />
+        <Route path="/financeiro/contas-receber/*" element={<ContasReceber />} />
+        <Route path="/financeiro/fluxo-caixa" element={<FluxoDeCaixa />} />
       </Route>
     </Routes>
   );
