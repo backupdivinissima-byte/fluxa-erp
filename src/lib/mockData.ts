@@ -1,4 +1,4 @@
-import type { Cliente, Fornecedor, Funcionario, Vendedor, Departamento, Cargo } from '../types';
+import type { Cliente, Fornecedor, Funcionario, Vendedor, Departamento, Cargo, LancamentoFinanceiro } from '../types';
 
 // Dados de demonstração — usados apenas quando não há projeto Firebase
 // configurado ainda (ambiente local de desenvolvimento/preview). Assim que
@@ -32,6 +32,21 @@ export const cargosMock: Cargo[] = [
 export const funcionariosMock: Funcionario[] = [
   { id: '1', nome: 'Patrícia Nunes', cpfCnpj: '234.567.891-00', cargo: 'Gerente de Operações', departamento: 'Operações', dataAdmissao: '2023-03-01', email: 'patricia@empresa.com.br', telefone: '(31) 99111-2233', ativo: true, criadoEm: now, atualizadoEm: now },
   { id: '2', nome: 'Rafael Souza', cpfCnpj: '345.678.912-00', cargo: 'Analista Financeiro', departamento: 'Financeiro', dataAdmissao: '2024-06-10', email: 'rafael@empresa.com.br', telefone: '(31) 99222-3344', ativo: true, criadoEm: now, atualizadoEm: now },
+];
+
+export const contasPagarMock: LancamentoFinanceiro[] = [
+  { id: '1', nome: 'Compra de matéria-prima — Metais & Cia', valor: 3200, vencimento: '2026-08-05', dataPagamento: '2026-08-05', status: 'pago', categoria: 'Matéria-prima', fornecedorId: '1', ativo: true, criadoEm: now, atualizadoEm: now },
+  { id: '2', nome: 'Aluguel da loja', valor: 2500, vencimento: '2026-08-10', dataPagamento: '2026-08-10', status: 'pago', categoria: 'Despesas fixas', ativo: true, criadoEm: now, atualizadoEm: now },
+  { id: '3', nome: 'Embalagens — Ouro Embalagens', valor: 890, vencimento: '2026-08-12', status: 'pendente', categoria: 'Embalagens', fornecedorId: '2', ativo: true, criadoEm: now, atualizadoEm: now },
+  { id: '4', nome: 'Energia elétrica', valor: 610, vencimento: '2026-08-22', status: 'pendente', categoria: 'Despesas fixas', ativo: true, criadoEm: now, atualizadoEm: now },
+  { id: '5', nome: 'Compra de matéria-prima — Metais & Cia', valor: 1450, vencimento: '2026-09-05', status: 'pendente', categoria: 'Matéria-prima', fornecedorId: '1', ativo: true, criadoEm: now, atualizadoEm: now },
+];
+
+export const contasReceberMock: LancamentoFinanceiro[] = [
+  { id: '1', nome: 'Venda — Ateliê Bela Vista', valor: 4800, vencimento: '2026-08-08', dataPagamento: '2026-08-08', status: 'pago', categoria: 'Vendas', clienteId: '1', ativo: true, criadoEm: now, atualizadoEm: now },
+  { id: '2', nome: 'Venda — Joana Ferreira', valor: 620, vencimento: '2026-08-15', status: 'vencido', categoria: 'Vendas', clienteId: '2', ativo: true, criadoEm: now, atualizadoEm: now },
+  { id: '3', nome: 'Venda — Semijoias Cristal', valor: 3100, vencimento: '2026-08-25', status: 'pendente', categoria: 'Vendas', clienteId: '3', ativo: true, criadoEm: now, atualizadoEm: now },
+  { id: '4', nome: 'Venda — Ateliê Bela Vista', valor: 2200, vencimento: '2026-09-02', status: 'pendente', categoria: 'Vendas', clienteId: '1', ativo: true, criadoEm: now, atualizadoEm: now },
 ];
 
 export const vendedoresMock: Vendedor[] = [

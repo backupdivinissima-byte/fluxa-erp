@@ -18,6 +18,8 @@ import {
   vendedoresMock,
   departamentosMock,
   cargosMock,
+  contasPagarMock,
+  contasReceberMock,
 } from './mockData';
 
 const mockPorTipo: Record<TipoCadastro, CadastroBase[]> = {
@@ -27,6 +29,8 @@ const mockPorTipo: Record<TipoCadastro, CadastroBase[]> = {
   vendedores: vendedoresMock,
   departamentos: departamentosMock,
   cargos: cargosMock,
+  contasPagar: contasPagarMock,
+  contasReceber: contasReceberMock,
 };
 
 // Assina a lista de registros de um cadastro (clientes, fornecedores, etc.)
@@ -49,26 +53,26 @@ export function assinarCadastro<T extends CadastroBase>(
   });
 }
 
-export async function criarRegistro(
+export async function criarRegistro<T extends CadastroBase = CadastroBase>(
   empresaId: string,
   tipo: TipoCadastro,
-  dados: Partial<CadastroBase>
+  dados: Partial<T>
 ) {
   if (!isFirebaseConfigured) return;
   const ref = collection(db, 'companies', empresaId, tipo);
   await addDoc(ref, {
     ...dados,
-    ativo: dados.ativo ?? true,
+    ativo: (dados as Partial<CadastroBase>).ativo ?? true,
     criadoEm: serverTimestamp(),
     atualizadoEm: serverTimestamp(),
   });
 }
 
-export async function atualizarRegistro(
+export async function atualizarRegistro<T extends CadastroBase = CadastroBase>(
   empresaId: string,
   tipo: TipoCadastro,
   id: string,
-  dados: Partial<CadastroBase>
+  dados: Partial<T>
 ) {
   if (!isFirebaseConfigured) return;
   const ref = doc(db, 'companies', empresaId, tipo, id);

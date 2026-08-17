@@ -28,7 +28,9 @@ export interface CadastroSchema {
   temMetasMultiplas?: boolean;
 }
 
-export const cadastroSchemas: Record<TipoCadastro, CadastroSchema> = {
+type TipoCadastroSimples = Exclude<TipoCadastro, 'contasPagar' | 'contasReceber'>;
+
+export const cadastroSchemas: Record<TipoCadastroSimples, CadastroSchema> = {
   clientes: {
     tipo: 'clientes',
     titulo: 'Clientes',
