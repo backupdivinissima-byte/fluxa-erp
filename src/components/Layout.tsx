@@ -3,60 +3,80 @@ import { useEffect, useRef, useState } from 'react';
 import fluxaIcon from '../assets/fluxa-icon.svg';
 import { useAuth } from '../contexts/AuthContext';
 
-interface ItemMenu {
+interface ItemLink {
+  tipo: 'link';
   to: string;
   label: string;
   icon: string;
 }
 
+interface ItemSubmenu {
+  tipo: 'submenu';
+  label: string;
+  icon: string;
+  itens: ItemLink[];
+}
+
+type EntradaMenu = ItemLink | ItemSubmenu;
+
 interface GrupoMenu {
   id: string;
   label: string;
   icon: string;
-  itens: ItemMenu[];
+  itens: EntradaMenu[];
 }
 
+// Tudo que é cadastro fica junto num único menu "Cadastro" — itens com
+// sub-opções (como Configurações contábeis) abrem um segundo nível ao lado,
+// no mesmo padrão de "Produto" com submenu do seu sistema atual.
 const grupos: GrupoMenu[] = [
   {
-    id: 'cadastros',
-    label: 'Cadastros',
+    id: 'cadastro',
+    label: 'Cadastro',
     icon: '📇',
     itens: [
-      { to: '/cadastros/clientes', label: 'Clientes', icon: '👤' },
-      { to: '/cadastros/fornecedores', label: 'Fornecedores', icon: '🚚' },
-      { to: '/cadastros/funcionarios', label: 'Funcionários', icon: '🧑‍💼' },
-      { to: '/cadastros/vendedores', label: 'Vendedores', icon: '🏷️' },
-    ],
-  },
-  {
-    id: 'contabil',
-    label: 'Contábil',
-    icon: '📊',
-    itens: [
-      { to: '/cadastros/departamentos', label: 'Departamentos', icon: '🏢' },
-      { to: '/cadastros/cargos', label: 'Cargos', icon: '🪪' },
+      { tipo: 'link', to: '/cadastros/clientes', label: 'Clientes', icon: '👤' },
+      { tipo: 'link', to: '/cadastros/fornecedores', label: 'Fornecedores', icon: '🚚' },
+      { tipo: 'link', to: '/cadastros/funcionarios', label: 'Funcionários', icon: '🧑‍💼' },
+      { tipo: 'link', to: '/cadastros/vendedores', label: 'Vendedores', icon: '🏷️' },
+      {
+        tipo: 'submenu',
+        label: 'Configurações contábeis',
+        icon: '⚙️',
+        itens: [
+          { tipo: 'link', to: '/cadastros/departamentos', label: 'Departamentos', icon: '🏢' },
+          { tipo: 'link', to: '/cadastros/cargos', label: 'Cargos', icon: '🪪' },
+        ],
+      },
     ],
   },
 ];
 
 const emBreve = ['Financeiro', 'Estoque', 'Compras', 'Nota Fiscal'];
 
+function linksDoGrupo(itens: EntradaMenu[]): ItemLink[] {
+  return itens.flatMap((entrada) => (entrada.tipo === 'link' ? [entrada] : entrada.itens));
+}
+
 export default function Layout() {
   const { perfil, empresa, sair } = useAuth();
   const [menuAberto, setMenuAberto] = useState<string | null>(null);
+  const [submenuAberto, setSubmenuAberto] = useState<string | null>(null);
   const navRef = useRef<HTMLElement>(null);
   const location = useLocation();
 
-  // Fecha o menu aberto ao trocar de página.
+  // Fecha os menus abertos ao trocar de página.
   useEffect(() => {
     setMenuAberto(null);
+    setSubmenuAberto(null);
   }, [location.pathname]);
 
-  // Fecha o menu aberto ao clicar fora da barra de navegação.
+  // Fecha os menus abertos ao clicar fora da barra de navegação.
   useEffect(() => {
     function aoClicarFora(evento: MouseEvent) {
       if (navRef.current && !navRef.current.contains(evento.target as Node)) {
         setMenuAberto(null);
+        setSubmenuAberto(null);
       }
     }
     document.addEventListener('mousedown', aoClicarFora);
@@ -65,7 +85,13 @@ export default function Layout() {
 
   function alternarMenu(id: string) {
     setMenuAberto((atual) => (atual === id ? null : id));
+    setSubmenuAberto(null);
   }
+
+  const classeItemDropdown = ({ isActive }: { isActive: boolean }) =>
+    `flex items-center gap-2.5 px-4 py-2 text-sm font-semibold transition-colors ${
+      isActive ? 'text-teal-500 bg-teal-500/5' : 'text-ink hover:bg-surface'
+    }`;
 
   return (
     <div className="min-h-screen flex flex-col bg-surface">
@@ -90,13 +116,16 @@ export default function Layout() {
             </NavLink>
 
             {grupos.map((grupo) => {
-              const ativo = grupo.itens.some((item) => location.pathname === item.to);
+              const ativo = linksDoGrupo(grupo.itens).some((item) => location.pathname.startsWith(item.to));
               return (
                 <div
                   key={grupo.id}
                   className="relative h-full flex items-center"
                   onMouseEnter={() => setMenuAberto(grupo.id)}
-                  onMouseLeave={() => setMenuAberto(null)}
+                  onMouseLeave={() => {
+                    setMenuAberto(null);
+                    setSubmenuAberto(null);
+                  }}
                 >
                   <button
                     type="button"
@@ -110,21 +139,52 @@ export default function Layout() {
                   </button>
 
                   {menuAberto === grupo.id && (
-                    <div className="absolute top-full left-0 pt-1 min-w-[210px] z-50">
+                    <div className="absolute top-full left-0 pt-1 min-w-[230px] z-50">
                       <div className="bg-white border border-line rounded-xl shadow-xl py-1.5">
-                        {grupo.itens.map((item) => (
-                          <NavLink
-                            key={item.to}
-                            to={item.to}
-                            className={({ isActive }) =>
-                              `flex items-center gap-2.5 px-4 py-2 text-sm font-semibold transition-colors ${
-                                isActive ? 'text-teal-500 bg-teal-500/5' : 'text-ink hover:bg-surface'
-                              }`
-                            }
-                          >
-                            <span className="text-base">{item.icon}</span> {item.label}
-                          </NavLink>
-                        ))}
+                        {grupo.itens.map((entrada) => {
+                          if (entrada.tipo === 'submenu') {
+                            const idSubmenu = `${grupo.id}:${entrada.label}`;
+                            return (
+                              <div
+                                key={entrada.label}
+                                className="relative"
+                                onMouseEnter={() => setSubmenuAberto(idSubmenu)}
+                                onMouseLeave={() => setSubmenuAberto(null)}
+                              >
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    setSubmenuAberto((atual) => (atual === idSubmenu ? null : idSubmenu))
+                                  }
+                                  className="w-full flex items-center justify-between gap-2.5 px-4 py-2 text-sm font-semibold text-ink hover:bg-surface transition-colors"
+                                >
+                                  <span className="flex items-center gap-2.5">
+                                    <span className="text-base">{entrada.icon}</span> {entrada.label}
+                                  </span>
+                                  <span className="text-[9px] opacity-60">▸</span>
+                                </button>
+
+                                {submenuAberto === idSubmenu && (
+                                  <div className="absolute top-0 left-full pl-1 min-w-[200px] z-50">
+                                    <div className="bg-white border border-line rounded-xl shadow-xl py-1.5">
+                                      {entrada.itens.map((item) => (
+                                        <NavLink key={item.to} to={item.to} className={classeItemDropdown}>
+                                          <span className="text-base">{item.icon}</span> {item.label}
+                                        </NavLink>
+                                      ))}
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
+                            );
+                          }
+
+                          return (
+                            <NavLink key={entrada.to} to={entrada.to} className={classeItemDropdown}>
+                              <span className="text-base">{entrada.icon}</span> {entrada.label}
+                            </NavLink>
+                          );
+                        })}
                       </div>
                     </div>
                   )}
