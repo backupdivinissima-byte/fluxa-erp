@@ -25,7 +25,7 @@ export default function Dashboard() {
   }, [empresa]);
 
   return (
-    <div className="p-8 max-w-6xl">
+    <div className="p-8 w-full">
       <h1 className="text-2xl font-extrabold text-ink tracking-tight">
         Olá, {perfil?.nome?.split(' ')[0]} 👋
       </h1>
