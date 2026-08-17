@@ -9,6 +9,11 @@ const cadastroLinks = [
   { to: '/cadastros/vendedores', label: 'Vendedores', icon: '🏷️' },
 ];
 
+const contabilLinks = [
+  { to: '/cadastros/departamentos', label: 'Departamentos', icon: '🏢' },
+  { to: '/cadastros/cargos', label: 'Cargos', icon: '🪪' },
+];
+
 export default function Layout() {
   const { perfil, empresa, sair } = useAuth();
 
@@ -42,6 +47,23 @@ export default function Layout() {
             Cadastros
           </div>
           {cadastroLinks.map((link) => (
+            <NavLink
+              key={link.to}
+              to={link.to}
+              className={({ isActive }) =>
+                `flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-colors ${
+                  isActive ? 'bg-teal-500/10 text-teal-500' : 'text-ink-soft hover:bg-surface'
+                }`
+              }
+            >
+              <span className="text-base">{link.icon}</span> {link.label}
+            </NavLink>
+          ))}
+
+          <div className="pt-4 pb-1 px-3 text-[11px] font-bold uppercase tracking-wider text-ink-soft/70">
+            Contábil
+          </div>
+          {contabilLinks.map((link) => (
             <NavLink
               key={link.to}
               to={link.to}
