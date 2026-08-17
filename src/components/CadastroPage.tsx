@@ -245,6 +245,21 @@ function FormularioConteudo({
     return assinarCadastro(empresaId, 'cargos', setCargosOpcoes);
   }, [precisaCargos, empresaId]);
 
+  // As <option>s de departamento/cargo só chegam depois da busca assíncrona.
+  // Se isso acontece depois do formulário montar, o valor salvo não "gruda"
+  // sozinho no <select> — reforça aqui assim que as opções existirem.
+  useEffect(() => {
+    if (!registro || departamentosOpcoes.length === 0) return;
+    const valorAtual = (registro as unknown as Record<string, unknown>).departamento;
+    if (valorAtual) setValue('departamento', valorAtual);
+  }, [departamentosOpcoes, registro, setValue]);
+
+  useEffect(() => {
+    if (!registro || cargosOpcoes.length === 0) return;
+    const valorAtual = (registro as unknown as Record<string, unknown>).cargo;
+    if (valorAtual) setValue('cargo', valorAtual);
+  }, [cargosOpcoes, registro, setValue]);
+
   const [buscandoDocumento, setBuscandoDocumento] = useState(false);
   const [mensagemDocumento, setMensagemDocumento] = useState<string | null>(null);
   const [documentoOk, setDocumentoOk] = useState(true);

@@ -50,9 +50,19 @@ const grupos: GrupoMenu[] = [
       },
     ],
   },
+  {
+    id: 'financeiro',
+    label: 'Financeiro',
+    icon: '💰',
+    itens: [
+      { tipo: 'link', to: '/financeiro/contas-pagar', label: 'Contas a pagar', icon: '📤' },
+      { tipo: 'link', to: '/financeiro/contas-receber', label: 'Contas a receber', icon: '📥' },
+      { tipo: 'link', to: '/financeiro/fluxo-caixa', label: 'Fluxo de caixa', icon: '📈' },
+    ],
+  },
 ];
 
-const emBreve = ['Financeiro', 'Estoque', 'Compras', 'Nota Fiscal'];
+const emBreve = ['Estoque', 'Compras', 'Nota Fiscal'];
 
 function linksDoGrupo(itens: EntradaMenu[]): ItemLink[] {
   return itens.flatMap((entrada) => (entrada.tipo === 'link' ? [entrada] : entrada.itens));
