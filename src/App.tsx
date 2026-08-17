@@ -13,6 +13,7 @@ import Cargos from './pages/cadastros/Cargos';
 import ContasPagar from './pages/financeiro/ContasPagar';
 import ContasReceber from './pages/financeiro/ContasReceber';
 import FluxoDeCaixa from './pages/financeiro/FluxoDeCaixa';
+import Produtos from './pages/estoque/Produtos';
 
 function RotaProtegida({ children }: { children: React.ReactNode }) {
   const { carregando, perfil } = useAuth();
@@ -49,6 +50,7 @@ function AppRoutes() {
         <Route path="/financeiro/contas-pagar/*" element={<ContasPagar />} />
         <Route path="/financeiro/contas-receber/*" element={<ContasReceber />} />
         <Route path="/financeiro/fluxo-caixa" element={<FluxoDeCaixa />} />
+        <Route path="/estoque/produtos/*" element={<Produtos />} />
       </Route>
     </Routes>
   );
